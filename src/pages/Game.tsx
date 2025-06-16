@@ -19,6 +19,7 @@ export const Game = () => {
           <>
             <Button onClick={gameState.newGame}>New Game</Button>
             <Button onClick={gameState.matchMaking}>Matchmaking</Button>
+            <Button onClick={gameState.pve}>Play vs. AI</Button>
           </>
         )}
         {gameState.isGameReadyToStart && !gameState.isStarted && (

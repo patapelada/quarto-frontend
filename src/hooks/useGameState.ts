@@ -55,6 +55,9 @@ export function useGameState() {
   function startGame() {
     socket.emit("start-game", { gameId });
   }
+  function pve() {
+    socket.emit("pve");
+  }
 
   function selectPiece(piece: PieceType) {
     if (isItMyTurn && availablePieces.includes(piece)) {
@@ -158,6 +161,7 @@ export function useGameState() {
     isGameOver,
     didIWin,
     newGame,
+    pve,
     matchMaking,
     startGame,
     selectPiece,
