@@ -9,9 +9,7 @@ function Layout() {
       <main className="flex-grow p-4">
         <Outlet />
       </main>
-      <footer className="bg-gray-100 p-4 text-center">
-        © 2025 My Application
-      </footer>
+      <footer className="bg-slate-200 p-2 text-center text-sm ">© 2025</footer>
     </div>
   );
 }
