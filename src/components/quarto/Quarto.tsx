@@ -58,10 +58,7 @@ export function Quarto() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-3 text-center text-lg font-bold">
-        {game.isGameOver ? (game.didIWin ? "You Win!" : "You Lose!") : ""}
-      </div>
+    <div className="grid grid-cols-5 gap-4">
       <DndContext
         onDragStart={handleDragStart}
         onDragCancel={handleDragCancel}
@@ -69,44 +66,76 @@ export function Quarto() {
       >
         <div className="col-start-1 col-span-2">
           {
-            <Board>
-              {game.board.map((row, rowIndex) =>
-                row.map((piece, colIndex) => (
-                  <Cell
-                    isDragging={isDragging}
-                    cell={positionToCell(rowIndex, colIndex)}
-                    key={`${rowIndex}-${colIndex}`}
-                  >
-                    {piece && <Piece piece={piece} />}
-                  </Cell>
-                ))
-              )}
-            </Board>
+            <div className="flex flex-col items-center gap-4">
+              <h3 className="text-2xl font-semibold tracking-tight">
+                Game Board
+              </h3>
+              <Board>
+                {game.board.map((row, rowIndex) =>
+                  row.map((piece, colIndex) => (
+                    <Cell
+                      isDragging={isDragging}
+                      cell={positionToCell(rowIndex, colIndex)}
+                      key={`${rowIndex}-${colIndex}`}
+                    >
+                      {piece && <Piece piece={piece} />}
+                    </Cell>
+                  ))
+                )}
+              </Board>
+            </div>
           }
         </div>
-        <div className="col-start-3 flex flex-col">
-          <h2 className="text-center">Selected Piece</h2>
-          <div className="flex flex-col items-center">
-            <div className="h-16 w-16">
-              {game.currentPiece && (
-                <DraggablePiece
-                  disabled={!game.isItMyTurn}
-                  piece={game.currentPiece}
-                  className={cn(
-                    game.isItMyTurn &&
-                      "transition duration-300 ease-in-out hover:cursor-pointer hover:-translate-y-1 hover:scale-105"
-                  )}
-                />
-              )}
+        <div className="col-start-3">
+          <div className="flex flex-col items-center gap-4">
+            <h3 className="text-2xl font-semibold tracking-tight">
+              {game.isStarted
+                ? game.isItMyTurn && game.currentTurn.id === TurnIds.PLACE
+                  ? "Your Piece to Place"
+                  : "Opponent's Piece"
+                : "Piece to Place"}
+            </h3>
+            <div className="flex flex-col items-center">
+              <div className="w-24 h-24 border border-slate-300 rounded-lg p-2 bg-slate-50">
+                {game.currentPiece ? (
+                  <DraggablePiece
+                    disabled={!game.isItMyTurn}
+                    piece={game.currentPiece}
+                    className={cn(
+                      game.isItMyTurn &&
+                        "transition duration-300 ease-in-out hover:cursor-pointer hover:-translate-y-1 hover:scale-105"
+                    )}
+                  />
+                ) : null}
+              </div>
+            </div>
+            <span className="text-muted-foreground text-sm text-center w-36">
+              {game.isStarted && !game.isGameOver
+                ? game.isItMyTurn
+                  ? game.currentTurn.id === TurnIds.PLACE
+                    ? "Drag your piece to a cell to place it."
+                    : "Click on a available piece to select it"
+                  : "Waiting for your opponent..."
+                : null}
+            </span>
+            <div className="text-lg font-semibold">
+              {game.isGameOver ? (game.didIWin ? "You Win!" : "You Lose!") : ""}
             </div>
           </div>
-          <div className="mt-auto">
-            <h2 className="text-center">Available Pieces</h2>
+        </div>
+        <div className="col-start-4 col-span-2 flex flex-col gap-4">
+          <div className="mb-4 flex flex-col items-center gap-4">
+            <h3 className="text-2xl font-semibold tracking-tight">
+              Available Pieces
+            </h3>
             <div className="grid grid-cols-4 gap-4">
               {Object.values(Pieces).map((piece) => {
                 function wrap(child: React.ReactNode | null = null) {
                   return (
-                    <div className="h-16 w-16" key={piece.value}>
+                    <div
+                      className="w-24 h-24 border border-slate-300 rounded-lg p-2 bg-slate-50"
+                      key={piece.value}
+                    >
                       {child}
                     </div>
                   );
