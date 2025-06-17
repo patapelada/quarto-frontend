@@ -24,11 +24,18 @@ const pieceId = {
 export const PieceIdSchema = z.nativeEnum(pieceId);
 export type PieceId = z.infer<typeof PieceIdSchema>;
 
+export const ColorTraits = {
+  LIGHT: "light",
+  DARK: "dark",
+} as const;
+export const ColorTraitsSchema = z.nativeEnum(ColorTraits);
+export type ColorTraitsType = z.infer<typeof ColorTraitsSchema>;
+
 export const PieceSchema = z.object({
   name: z.string(),
   value: PieceIdSchema,
   traits: z.object({
-    color: z.enum(["light", "dark"]),
+    color: ColorTraitsSchema,
     shape: z.enum(["round", "square"]),
     height: z.enum(["tall", "short"]),
     fill: z.enum(["solid", "hollow"]),
@@ -41,7 +48,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LRTS",
     value: PieceIdSchema.enum.LRTS,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "round",
       height: "tall",
       fill: "solid",
@@ -51,7 +58,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LRTH",
     value: PieceIdSchema.enum.LRTH,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "round",
       height: "tall",
       fill: "hollow",
@@ -61,7 +68,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LRSS",
     value: PieceIdSchema.enum.LRSS,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "round",
       height: "short",
       fill: "solid",
@@ -71,7 +78,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LRSH",
     value: PieceIdSchema.enum.LRSH,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "round",
       height: "short",
       fill: "hollow",
@@ -82,7 +89,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LSTS",
     value: PieceIdSchema.enum.LSTS,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "square",
       height: "tall",
       fill: "solid",
@@ -92,7 +99,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LSTH",
     value: PieceIdSchema.enum.LSTH,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "square",
       height: "tall",
       fill: "hollow",
@@ -102,7 +109,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LSSS",
     value: PieceIdSchema.enum.LSSS,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "square",
       height: "short",
       fill: "solid",
@@ -112,7 +119,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "LSSH",
     value: PieceIdSchema.enum.LSSH,
     traits: {
-      color: "light",
+      color: ColorTraitsSchema.enum.LIGHT,
       shape: "square",
       height: "short",
       fill: "hollow",
@@ -123,7 +130,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DRTS",
     value: PieceIdSchema.enum.DRTS,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "round",
       height: "tall",
       fill: "solid",
@@ -133,7 +140,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DRTH",
     value: PieceIdSchema.enum.DRTH,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "round",
       height: "tall",
       fill: "hollow",
@@ -143,7 +150,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DRSS",
     value: PieceIdSchema.enum.DRSS,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "round",
       height: "short",
       fill: "solid",
@@ -153,7 +160,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DRSH",
     value: PieceIdSchema.enum.DRSH,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "round",
       height: "short",
       fill: "hollow",
@@ -164,7 +171,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DSTS",
     value: PieceIdSchema.enum.DSTS,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "square",
       height: "tall",
       fill: "solid",
@@ -174,7 +181,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DSTH",
     value: PieceIdSchema.enum.DSTH,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "square",
       height: "tall",
       fill: "hollow",
@@ -184,7 +191,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DSSS",
     value: PieceIdSchema.enum.DSSS,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "square",
       height: "short",
       fill: "solid",
@@ -194,7 +201,7 @@ export const Pieces: { [key: string]: PieceType } = {
     name: "DSSH",
     value: PieceIdSchema.enum.DSSH,
     traits: {
-      color: "dark",
+      color: ColorTraitsSchema.enum.DARK,
       shape: "square",
       height: "short",
       fill: "hollow",
