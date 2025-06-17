@@ -1,5 +1,5 @@
 import { useGameState } from "@/hooks/useGameState";
-import { Cells, Pieces, Turns } from "@/types";
+import { Cells, Pieces, TurnIds } from "@/types";
 import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
 import { useState } from "react";
 import { Board } from "./Board";
@@ -28,6 +28,7 @@ export function Quarto() {
   }
 
   function handleDragEnd(event: DragEndEvent) {
+    setIsDragging(false);
     if (event.over === null) {
       return;
     }
@@ -44,9 +45,15 @@ export function Quarto() {
       console.error(`Cell with id ${event.over?.id} not found`);
       return;
     }
+    if (game.board[cell.position.row][cell.position.col] !== null) {
+      console.error(
+        `Cell at position (${cell.position.row}, ${cell.position.col}) is already occupied`
+      );
+      return;
+    }
+
     console.log("Dropping piece:", game.currentPiece, "into cell:", cell);
     game.placePiece(cell);
-    setIsDragging(false);
   }
 
   return (
@@ -93,14 +100,14 @@ export function Quarto() {
             )}
           </div>
           <h2 className="text-center">Available Pieces</h2>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-4">
             {Object.values(Pieces).map((piece) => {
               const isAvailable = game.availablePieces.some(
                 (p) => p.value === piece.value
               );
               if (
                 !game.isItMyTurn ||
-                game.currentTurn === Turns.PLACE ||
+                game.currentTurn.id === TurnIds.PLACE ||
                 !game.isStarted
               ) {
                 return isAvailable ? (

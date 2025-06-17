@@ -20,9 +20,9 @@ export function Cell({ children, cell, isDragging }: Props) {
     <div
       ref={setNodeRef}
       className={cn(
-        "flex items-center justify-center w-24 h-24 border border-gray-300 rounded-lg",
+        "flex items-center justify-center w-24 h-24 border border-gray-300 rounded-lg p-2",
         validDropLocation && isDragging && "bg-green-100",
-        isOver && "bg-blue-100"
+        validDropLocation && isOver && "bg-blue-100"
       )}
       data-row={cell.position.row}
       data-col={cell.position.col}

@@ -2,6 +2,7 @@ import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { socket } from "@/socket";
 import {
   Pieces,
+  TurnIds,
   Turns,
   type CellType,
   type PieceId,
@@ -29,7 +30,7 @@ export function useGameState() {
     DEFAULT_AVAILABLE_PIECES
   );
   const [currentPiece, setCurrentPiece] = useState<PieceType | null>(null);
-  const [currentTurn, setCurrentTurn] = useState<TurnType>(Turns.PICK);
+  const [currentTurn, setCurrentTurn] = useState<TurnType>(Turns[TurnIds.PICK]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [winnerId, setWinnerId] = useState<string | null>(null);
 

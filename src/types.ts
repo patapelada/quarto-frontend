@@ -202,11 +202,11 @@ export const Pieces: { [key: string]: PieceType } = {
   },
 } as const;
 
-const turnId = {
+export const TurnIds = {
   PICK: 0,
   PLACE: 1,
 };
-export const TurnIdSchema = z.nativeEnum(turnId);
+export const TurnIdSchema = z.nativeEnum(TurnIds);
 export type TurnId = z.infer<typeof TurnIdSchema>;
 
 export const TurnSchema = z.object({
@@ -338,12 +338,3 @@ export const Cells: { [key: string]: CellType } = {
     position: { row: 0, col: 3 },
   },
 } as const;
-
-export const PIECE_ITEM_TYPE = {
-  AVAILABLE_PIECE: "available-piece",
-  CURRENT_PIECE: "current-piece",
-  PLACED_PIECE: "placed-piece",
-} as const;
-
-export type PieceItemType =
-  (typeof PIECE_ITEM_TYPE)[keyof typeof PIECE_ITEM_TYPE];
