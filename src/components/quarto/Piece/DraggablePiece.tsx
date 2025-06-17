@@ -8,7 +8,7 @@ export function DraggablePiece(props: PieceProps) {
 
   return (
     <Piece
-      ref={setNodeRef}
+      ref={props.disabled ? undefined : setNodeRef}
       style={{
         opacity: isDragging ? 0.5 : undefined,
       }}

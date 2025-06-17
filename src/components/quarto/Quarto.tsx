@@ -1,4 +1,5 @@
 import { useGameState } from "@/hooks/useGameState";
+import { cn } from "@/lib/utils";
 import { Cells, Pieces, TurnIds } from "@/types";
 import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
 import { useState } from "react";
@@ -83,54 +84,50 @@ export function Quarto() {
             </Board>
           }
         </div>
-        <div className="col-start-3">
+        <div className="col-start-3 flex flex-col">
           <h2 className="text-center">Selected Piece</h2>
           <div className="flex flex-col items-center">
-            {game.currentPiece ? (
-              game.isItMyTurn ? (
+            <div className="h-16 w-16">
+              {game.currentPiece && (
                 <DraggablePiece
+                  disabled={!game.isItMyTurn}
                   piece={game.currentPiece}
-                  className="h-16 w-16"
+                  className={cn(
+                    game.isItMyTurn &&
+                      "transition duration-300 ease-in-out hover:cursor-pointer hover:-translate-y-1 hover:scale-105"
+                  )}
                 />
-              ) : (
-                <Piece piece={game.currentPiece} className="h-16 w-16" />
-              )
-            ) : (
-              <div className="h-16 w-16"></div>
-            )}
+              )}
+            </div>
           </div>
-          <h2 className="text-center">Available Pieces</h2>
-          <div className="grid grid-cols-4 gap-4">
-            {Object.values(Pieces).map((piece) => {
-              const isAvailable = game.availablePieces.some(
-                (p) => p.value === piece.value
-              );
-              if (
-                !game.isItMyTurn ||
-                game.currentTurn.id === TurnIds.PLACE ||
-                !game.isStarted
-              ) {
-                return isAvailable ? (
-                  <Piece
-                    key={piece.value}
-                    piece={piece}
-                    className="h-16 w-16"
-                  />
-                ) : (
-                  <div className="h-16 w-16" key={piece.value}></div>
-                );
-              }
-              return isAvailable ? (
-                <Piece
-                  key={piece.value}
-                  piece={piece}
-                  className="h-16 w-16 hover:cursor-pointer"
-                  onClick={() => game.selectPiece(piece)}
-                />
-              ) : (
-                <div className="h-16 w-16" key={piece.value}></div>
-              );
-            })}
+          <div className="mt-auto">
+            <h2 className="text-center">Available Pieces</h2>
+            <div className="grid grid-cols-4 gap-4">
+              {Object.values(Pieces).map((piece) => {
+                function wrap(child: React.ReactNode | null = null) {
+                  return (
+                    <div className="h-16 w-16" key={piece.value}>
+                      {child}
+                    </div>
+                  );
+                }
+                if (
+                  !game.availablePieces.some((p) => p.value === piece.value)
+                ) {
+                  return wrap();
+                }
+
+                const pieceArgs = game.isItMyTurn &&
+                  game.currentTurn.id === TurnIds.PICK &&
+                  game.isStarted && {
+                    onClick: () => game.selectPiece(piece),
+                    className:
+                      "transition duration-300 ease-in-out hover:cursor-pointer hover:-translate-y-1 hover:scale-105",
+                  };
+
+                return wrap(<Piece piece={piece} {...pieceArgs} />);
+              })}
+            </div>
           </div>
         </div>
         <DragOverlay dropAnimation={null}>
