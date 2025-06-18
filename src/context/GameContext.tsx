@@ -1,16 +1,18 @@
 import { useSocketConnection } from "@/hooks/useSocketConnection";
 import { socket } from "@/socket";
 import {
+  Cells,
   Pieces,
   TurnIds,
   Turns,
+  type CellId,
   type CellType,
   type PieceId,
   type PieceType,
   type TurnId,
   type TurnType,
 } from "@/types";
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const DEFAULT_BOARD = Array(4).fill(Array(4).fill(null));
 const DEFAULT_AVAILABLE_PIECES = Array.from(
@@ -18,7 +20,34 @@ const DEFAULT_AVAILABLE_PIECES = Array.from(
   (_, i) => Pieces[i]
 );
 
-export function useGameState() {
+type GameContextType = {
+  isConnected: boolean;
+  board: Array<Array<PieceType | null>>;
+  availablePieces: PieceType[];
+  currentPiece: PieceType | null;
+  gameId: string | null;
+  userId: string | null;
+  opponentId: string | null;
+  currentTurn: TurnType;
+  currentPlayerId: string | null;
+  isItMyTurn: boolean;
+  isGameReadyToStart: boolean;
+  isStarted: boolean;
+  isGameOver: boolean;
+  didIWin: boolean;
+  winningLines: Array<Array<CellType>>;
+  newGame: () => void;
+  pve: () => void;
+  matchMaking: () => void;
+  startGame: () => void;
+  selectPiece: (piece: PieceType) => void;
+  placePiece: (cell: CellType) => void;
+  leaveGame: () => void;
+};
+
+const GameContext = createContext<GameContextType | null>(null);
+
+export function GameProvider({ children }: { children: React.ReactNode }) {
   const { isConnected, userId } = useSocketConnection();
 
   const [gameId, setGameId] = useState<string | null>(null);
@@ -32,7 +61,9 @@ export function useGameState() {
   const [currentPiece, setCurrentPiece] = useState<PieceType | null>(null);
   const [currentTurn, setCurrentTurn] = useState<TurnType>(Turns[TurnIds.PICK]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [winnerId, setWinnerId] = useState<string | null>(null);
+  const [winningLines, setWinningLines] = useState<Array<Array<CellType>>>([]);
 
   const isItMyTurn = useMemo(
     () => currentPlayerId === userId,
@@ -42,8 +73,21 @@ export function useGameState() {
     () => !!gameId && !!opponentId,
     [gameId, opponentId]
   );
-  const isGameOver = useMemo(() => !!winnerId, [winnerId]);
   const didIWin = useMemo(() => winnerId === userId, [winnerId, userId]);
+
+  function reset() {
+    setGameId(null);
+    setOpponentId(null);
+    setIsStarted(false);
+    setBoard(DEFAULT_BOARD);
+    setAvailablePieces(DEFAULT_AVAILABLE_PIECES);
+    setCurrentPiece(null);
+    setCurrentTurn(Turns[TurnIds.PICK]);
+    setCurrentPlayerId(null);
+    setIsGameOver(false);
+    setWinnerId(null);
+    setWinningLines([]);
+  }
 
   function newGame() {
     socket.emit("new-game");
@@ -56,8 +100,13 @@ export function useGameState() {
   function startGame() {
     socket.emit("start-game", { gameId });
   }
+
   function pve() {
     socket.emit("pve");
+  }
+
+  function leaveGame() {
+    socket.emit("leave-game");
   }
 
   function selectPiece(piece: PieceType) {
@@ -85,6 +134,8 @@ export function useGameState() {
       board: Array<Array<PieceId | null>>;
       availablePieces: Array<PieceId>;
       winnerId: string | null;
+      gameOver: boolean;
+      winningLines: Array<Array<CellId>>;
     }) {
       console.log("Game state updated:", data);
       setCurrentTurn(Turns[data.currentTurn]);
@@ -98,7 +149,12 @@ export function useGameState() {
           row.map((pieceId) => (pieceId !== null ? Pieces[pieceId] : null))
         )
       );
+
+      setIsGameOver(data.gameOver);
       setWinnerId(data.winnerId);
+      setWinningLines(
+        data.winningLines.map((line) => line.map((cellId) => Cells[cellId]))
+      );
     }
     socket.on("game-state-updated", onGameStateUpdated);
     return () => {
@@ -116,6 +172,19 @@ export function useGameState() {
 
     return () => {
       socket.off("player-joined", onPlayerJoined);
+    };
+  }, []);
+
+  useEffect(() => {
+    function onGameLeft(data: { gameId: string }) {
+      console.log("Game left:", data.gameId);
+      reset();
+    }
+
+    socket.on("game-left", onGameLeft);
+
+    return () => {
+      socket.off("game-left", onGameLeft);
     };
   }, []);
 
@@ -146,7 +215,7 @@ export function useGameState() {
     };
   }, []);
 
-  return {
+  const value: GameContextType = {
     isConnected,
     board,
     availablePieces,
@@ -161,11 +230,23 @@ export function useGameState() {
     isStarted,
     isGameOver,
     didIWin,
+    winningLines,
     newGame,
     pve,
     matchMaking,
     startGame,
+    leaveGame,
     selectPiece,
     placePiece,
   };
+
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+}
+
+export function useGameContext() {
+  const context = useContext(GameContext);
+  if (!context) {
+    throw new Error("useGameContext must be used within a GameProvider");
+  }
+  return context;
 }

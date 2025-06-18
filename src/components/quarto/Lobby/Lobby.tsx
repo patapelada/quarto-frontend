@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { useGameState } from "@/hooks/useGameState";
-import { useEffect } from "react";
+import { useGameContext } from "@/context/GameContext";
 import { useNavigate } from "react-router";
 
 export function Lobby() {
-  const game = useGameState();
+  const game = useGameContext();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (game.isStarted) {
-      navigate("/Game");
-    }
-  }, [game.isStarted, navigate]);
+  game.leaveGame();
+
+  const handlePve = () => {
+    game.pve();
+    navigate("/game");
+  };
 
   return (
     <div>
@@ -27,7 +27,7 @@ export function Lobby() {
           <>
             <Button onClick={game.newGame}>New Game</Button>
             <Button onClick={game.matchMaking}>Matchmaking</Button>
-            <Button onClick={game.pve}>Play vs. AI</Button>
+            <Button onClick={handlePve}>Play vs. AI</Button>
           </>
         )}
         {game.isGameReadyToStart && !game.isStarted && (

@@ -1,4 +1,4 @@
-import { useGameState } from "@/hooks/useGameState";
+import { useGameContext } from "@/context/GameContext";
 import { cn } from "@/lib/utils";
 import { Cells, Pieces, TurnIds } from "@/types";
 import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
@@ -8,7 +8,7 @@ import { Cell } from "./Cell";
 import { DraggablePiece, Piece } from "./Piece";
 
 export function Quarto() {
-  const game = useGameState();
+  const game = useGameContext();
   const [isDragging, setIsDragging] = useState(false);
 
   function positionToCell(row: number, col: number) {
@@ -72,15 +72,22 @@ export function Quarto() {
               </h3>
               <Board>
                 {game.board.map((row, rowIndex) =>
-                  row.map((piece, colIndex) => (
-                    <Cell
-                      isDragging={isDragging}
-                      cell={positionToCell(rowIndex, colIndex)}
-                      key={`${rowIndex}-${colIndex}`}
-                    >
-                      {piece && <Piece piece={piece} />}
-                    </Cell>
-                  ))
+                  row.map((piece, colIndex) => {
+                    const cell = positionToCell(rowIndex, colIndex);
+                    const isWinningCell = game.winningLines.some((line) =>
+                      line.includes(cell)
+                    );
+                    return (
+                      <Cell
+                        isDragging={isDragging}
+                        cell={cell}
+                        key={`${rowIndex}-${colIndex}`}
+                        isWinningCell={isWinningCell}
+                      >
+                        {piece && <Piece piece={piece} />}
+                      </Cell>
+                    );
+                  })
                 )}
               </Board>
             </div>

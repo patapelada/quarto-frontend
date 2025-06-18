@@ -11,23 +11,19 @@ export function useSocketConnection() {
       setUserId(socket.id || null);
     }
 
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
     function onError(error: Error) {
       console.error("Socket error:", error);
     }
 
     socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
     socket.on("error", onError);
 
-    socket.connect();
+    if (socket.disconnected) {
+      socket.connect();
+    }
 
     return () => {
       socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
       socket.off("error", onError);
       socket.disconnect();
     };
