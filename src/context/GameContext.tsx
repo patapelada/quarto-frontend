@@ -40,6 +40,7 @@ type GameContextType = {
   pve: () => void;
   matchMaking: () => void;
   startGame: () => void;
+  joinGame: (gameId: string) => void;
   selectPiece: (piece: PieceType) => void;
   placePiece: (cell: CellType) => void;
   leaveGame: () => void;
@@ -99,6 +100,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   function startGame() {
     socket.emit("start-game", { gameId });
+  }
+
+  function joinGame(gameId: string) {
+    socket.emit("join-game", { gameId });
   }
 
   function pve() {
@@ -206,6 +211,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     function onGameStarted(_data: { gameId: string }) {
       console.log("Game started:");
       setIsStarted(true);
+
+      if (typeof window !== "undefined" && window.dispatchEvent) {
+        const gameStartedEvent = new CustomEvent("game-started");
+        window.dispatchEvent(gameStartedEvent);
+      }
     }
 
     socket.on("game-started", onGameStarted);
@@ -232,6 +242,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     didIWin,
     winningLines,
     newGame,
+    joinGame,
     pve,
     matchMaking,
     startGame,

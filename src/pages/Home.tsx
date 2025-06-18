@@ -1,9 +1,6 @@
 import { Lobby } from "@/components/quarto/Lobby";
 import { Piece } from "@/components/quarto/Piece";
-import { H1 } from "@/components/ui/h1";
-import { H2 } from "@/components/ui/h2";
-import { H3 } from "@/components/ui/h3";
-import { Lead } from "@/components/ui/lead";
+import { H1, H2, H3, Lead } from "@/components/ui/typography";
 import { Pieces } from "@/types";
 
 export const Home = () => {
@@ -32,8 +29,8 @@ export const Home = () => {
     {
       trait: "Solidity",
       values: [
-        { name: "Solid", value: Pieces[0] },
-        { name: "Hollow", value: Pieces[1] },
+        { name: "Solid", value: Pieces[8] },
+        { name: "Hollow", value: Pieces[9] },
       ],
     },
   ];
