@@ -21,7 +21,7 @@ const DEFAULT_AVAILABLE_PIECES = Array.from(
 );
 
 type GameContextType = {
-  isConnected: boolean;
+  isConnected: boolean | null;
   board: Array<Array<PieceType | null>>;
   availablePieces: PieceType[];
   currentPiece: PieceType | null;

@@ -2,7 +2,7 @@ import { socket } from "@/socket";
 import { useEffect, useState } from "react";
 
 export function useSocketConnection() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {

@@ -1,7 +1,15 @@
 import { useGameContext } from "@/context/GameContext";
 import { cn } from "@/lib/utils";
 import { Cells, Pieces, TurnIds } from "@/types";
-import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
 import { useState } from "react";
 import { Board } from "./Board";
 import { Cell } from "./Cell";
@@ -10,6 +18,10 @@ import { DraggablePiece, Piece } from "./Piece";
 export function Quarto() {
   const game = useGameContext();
   const [isDragging, setIsDragging] = useState(false);
+
+  const touchSensor = useSensor(TouchSensor);
+  const mouseSensor = useSensor(MouseSensor);
+  const sensors = useSensors(touchSensor, mouseSensor);
 
   function positionToCell(row: number, col: number) {
     const cell = Object.values(Cells).find(
@@ -60,6 +72,7 @@ export function Quarto() {
   return (
     <div className="flex flex-col gap-4">
       <DndContext
+        sensors={sensors}
         onDragStart={handleDragStart}
         onDragCancel={handleDragCancel}
         onDragEnd={handleDragEnd}

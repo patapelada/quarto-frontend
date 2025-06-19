@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -50,12 +51,19 @@ export function Lobby() {
 
   return (
     <div>
-      {game.isConnected ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {game.isConnected === null && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <Skeleton className="h-[125px] border shadow-sm rounded-xl" />
+          <Skeleton className="h-[125px] border shadow-sm rounded-xl" />
+        </div>
+      )}
+      {game.isConnected && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PvPCard />
           <PvECard />
         </div>
-      ) : (
+      )}
+      {game.isConnected === false && (
         <Alert variant="destructive">
           <AlertCircleIcon />
           <AlertTitle>Unable to connect to the server!</AlertTitle>
