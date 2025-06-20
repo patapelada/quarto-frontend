@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-06-20
+
+### 🐛 Bug Fixes
+
+- Use env vars for backend url
+
 ## [0.2.0] - 2025-06-20
 
 ### 🚀 Features
 
 - Add ci
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.2.0
 
 ## [0.1.0] - 2025-06-20
 
