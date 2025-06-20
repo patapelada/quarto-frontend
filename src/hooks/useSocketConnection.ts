@@ -19,7 +19,12 @@ export function useSocketConnection() {
     socket.on("error", onError);
 
     if (socket.disconnected) {
-      socket.connect();
+      try {
+        socket.connect();
+      } catch (error) {
+        console.error("Socket reconnection error:", error);
+        setIsConnected(false);
+      }
     }
 
     return () => {
