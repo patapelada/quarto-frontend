@@ -15,8 +15,13 @@ export function useSocketConnection() {
       console.error("Socket error:", error);
     }
 
+    function onConnectError(_error: Error) {
+      setIsConnected(false);
+    }
+
     socket.on("connect", onConnect);
     socket.on("error", onError);
+    socket.on("connect_error", onConnectError);
 
     if (socket.disconnected) {
       try {
@@ -30,6 +35,7 @@ export function useSocketConnection() {
     return () => {
       socket.off("connect", onConnect);
       socket.off("error", onError);
+      socket.off("connect_error", onConnectError);
       socket.disconnect();
     };
   }, []);
