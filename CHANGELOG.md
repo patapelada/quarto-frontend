@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2025-06-25
+
+### 🐛 Bug Fixes
+
+- *(ci)* Ommit azure/login
+
 ## [0.3.1] - 2025-06-25
 
 ### 🐛 Bug Fixes
 
 - *(ci)* Deploy dependecies
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.3.1
 
 ## [0.3.0] - 2025-06-25
 
