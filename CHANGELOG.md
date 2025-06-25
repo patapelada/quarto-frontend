@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2025-06-25
+
+### 🐛 Bug Fixes
+
+- *(ci)* Deploy dependecies
+
 ## [0.3.0] - 2025-06-25
 
 ### 🚀 Features
 
 - Add deploy workflow
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.3.0
 
 ## [0.2.3] - 2025-06-24
 
