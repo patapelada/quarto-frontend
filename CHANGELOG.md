@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-06-25
+
+### 🚀 Features
+
+- Add deploy workflow
+
 ## [0.2.3] - 2025-06-24
 
 ### 🐛 Bug Fixes
 
 - Env handling within container
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.2.3
 
 ## [0.2.2] - 2025-06-20
 
