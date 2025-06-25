@@ -33,12 +33,7 @@ jobs:
         run: |
           echo "TAG_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy public GHCR image to Container App
+      - name: Deploy Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
